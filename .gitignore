@@ -1,0 +1,6 @@
+# Do not commit these directories
+.idea/
+out/
+
+# Do not commit these files
+*.iml
