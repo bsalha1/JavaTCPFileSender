@@ -2,55 +2,52 @@ package com.reliableplugins.loaderclasssender;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 
 public class TCPClient
 {
     public static void main(String args[]) throws Exception
     {
+        if(args.length != 3)
+        {
+            System.out.println("[FAIL] Need two arguments, server ip, port, class name");
+        }
         int totalBytes = 2;
-        System.out.print("Enter the class name: ");
-        Scanner scanner = new Scanner(System.in);
-        String classname = scanner.nextLine();
+        String ipAddress = args[0];
+        int port = Integer.parseInt(args[1]);
+        String classname = args[2];
 
         byte[] aByte = new byte[1];
         int bytesRead;
 
-        Socket clientSocket;
-        InputStream is;
+        Socket localSocket;
+        InputStream socketStream;
+        ByteArrayOutputStream outputStream;
 
         try
         {
-            clientSocket = new Socket("127.0.0.1", 3248);
-            is = clientSocket.getInputStream();
-        }
-        catch (IOException e)
-        {
-            System.out.println(e.toString());
-            return;
-        }
+            localSocket = new Socket(ipAddress, port);
+            System.out.println("Socket connected to " + ipAddress + ":" + port);
+            socketStream = localSocket.getInputStream();
+            outputStream = new ByteArrayOutputStream();
 
-        ByteArrayOutputStream output = new ByteArrayOutputStream();
-
-        try
-        {
-            bytesRead = is.read(aByte, 0, aByte.length);
+            System.out.println("Downloading class...");
+            bytesRead = socketStream.read(aByte, 0, aByte.length);
             do
             {
-                output.write(aByte);
-                bytesRead = is.read(aByte);
+                outputStream.write(aByte); // Write sent bytes to output stream
+                bytesRead = socketStream.read(aByte);
                 totalBytes += bytesRead;
             } while (bytesRead != -1);
 
-            System.out.println("Downloaded: " + totalBytes + " bytes.");
-            clientSocket.close();
+            System.out.println("Downloaded: " + totalBytes + " bytes");
+            localSocket.close();
         }
-        catch (IOException e)
+        catch (Exception e)
         {
-            System.out.println(e.toString());
+            e.printStackTrace(System.out);
             return;
         }
 
-        LoadClass.loadClass(classname, output.toByteArray());
+        LoadClass.loadClass(classname, outputStream.toByteArray());
     }
 }

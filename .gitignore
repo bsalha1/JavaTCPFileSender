@@ -1,6 +1,7 @@
 # Do not commit these directories
 .idea/
 out/
+classes/
 
 # Do not commit these files
 *.iml
