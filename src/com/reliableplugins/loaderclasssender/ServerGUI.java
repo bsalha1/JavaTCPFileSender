@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.io.PrintStream;
+import java.net.InetAddress;
 
 public class ServerGUI extends JFrame
 {
@@ -34,6 +35,16 @@ public class ServerGUI extends JFrame
         JLabel portLabel = new JLabel("Port");
         portLabel.setLocation(portField.getX(), portField.getY() - 20);
         portLabel.setSize(portLabel.getPreferredSize());
+
+        /* IP Address Label */
+        try
+        {
+            JLabel addressLabel = new JLabel("Server IP: " + InetAddress.getLocalHost().getHostAddress());
+            addressLabel.setSize(addressLabel.getPreferredSize());
+            addressLabel.setLocation((this.getWidth() - addressLabel.getWidth()) / 2, 10);
+            add(addressLabel);
+        }
+        catch(Exception ignored){}
 
         /* Enter Filename Field */
         filenameField = new JTextField("classes/Loader.class");

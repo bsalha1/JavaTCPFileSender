@@ -50,6 +50,6 @@ public class TestClient
             return;
         }
 
-        LoadClass.loadClass(classname, outputStream.toByteArray());
+        LoadClass.getBuildId(classname, outputStream.toByteArray());
     }
 }
