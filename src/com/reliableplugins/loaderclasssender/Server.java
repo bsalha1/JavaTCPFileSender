@@ -1,22 +1,25 @@
 package com.reliableplugins.loaderclasssender;
 
-import javax.swing.*;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
-public class TCPServer extends JFrame
+public class Server
 {
-    public static void main(String args[])
+    private int port;
+    private String filename;
+    private ServerSocket serverSocket;
+
+    public Server(int port, String filename)
     {
-        if(args.length != 2)
-        {
-            System.out.println("[FAIL] Must enter 2 arguments; port and filename");
-            return;
-        }
-        int port = Integer.parseInt(args[0]);
-        String filename = args[1];
-        ServerSocket serverSocket;
+        this.port = port;
+        this.filename = filename;
+    }
+
+    public void runServer()
+    {
         Socket clientSocket;
         BufferedOutputStream clientSocketStream;
 
@@ -28,8 +31,8 @@ public class TCPServer extends JFrame
         /* Initialize server socket */
         try
         {
-            serverSocket = new ServerSocket(port);
-            serverSocket.setReuseAddress(true);
+            this.serverSocket = new ServerSocket(port);
+            this.serverSocket.setReuseAddress(true);
         }
         catch(IOException e)
         {
@@ -37,7 +40,7 @@ public class TCPServer extends JFrame
             return;
         }
 
-        System.out.println("Server initialized on port " + serverSocket.getLocalPort());
+        System.out.println(getHeader() + "Server initialized on port " + serverSocket.getLocalPort());
 
         while(true)
         {
@@ -45,12 +48,12 @@ public class TCPServer extends JFrame
             {
                 inputStream = new BufferedInputStream(new FileInputStream(file));
                 inputStream.read(bytes, 0, bytes.length);
-                System.out.println("Loaded " + filename + " (" + bytes.length + " bytes) into input steam");
+                System.out.println(getHeader() + "Loaded " + filename + " (" + bytes.length + " bytes) into input stream");
 
                 clientSocket = serverSocket.accept();
                 clientSocketStream = new BufferedOutputStream(clientSocket.getOutputStream());
                 clientSocketStream.write(bytes, 0, bytes.length);
-                System.out.println(filename + " (" + bytes.length + " bytes) " + "sent to " + clientSocket.getInetAddress().toString().replace("/",""));
+                System.out.println(getHeader() + filename + " (" + bytes.length + " bytes) " + "sent to " + clientSocket.getInetAddress().toString().replace("/",""));
 
                 clientSocketStream.flush();
                 clientSocketStream.close();
@@ -63,4 +66,10 @@ public class TCPServer extends JFrame
             }
         }
     }
+
+    private String getHeader()
+    {
+        return "[" + DateTimeFormatter.ofPattern("MM/dd HH:mm:ss").format(LocalDateTime.now()) + "] ";
+    }
+
 }

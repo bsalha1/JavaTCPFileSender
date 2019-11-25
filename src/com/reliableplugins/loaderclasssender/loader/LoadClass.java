@@ -1,4 +1,4 @@
-package com.reliableplugins.loaderclasssender;
+package com.reliableplugins.loaderclasssender.loader;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

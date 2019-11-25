@@ -1,9 +1,11 @@
-package com.reliableplugins.loaderclasssender;
+package com.reliableplugins.loaderclasssender.debug;
+
+import com.reliableplugins.loaderclasssender.loader.LoadClass;
 
 import java.io.*;
 import java.net.Socket;
 
-public class TCPClient
+public class TestClient
 {
     public static void main(String args[]) throws Exception
     {

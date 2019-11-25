@@ -1,4 +1,4 @@
-package com.reliableplugins.loaderclasssender;
+package com.reliableplugins.loaderclasssender.loader;
 
 public class ByteClassLoader extends ClassLoader
 {
